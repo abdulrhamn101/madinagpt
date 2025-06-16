@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+<head>
+  <meta charset="UTF-8">
+  <title>المدينة جي بي تي</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f9fc;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      font-weight: bold;
+      color: #444;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #357ab8;
+    }
+
+    #response, #context {
+      margin-top: 24px;
+      background: #f2f2f2;
+      padding: 1rem;
+      border-radius: 6px;
+      direction: rtl; /* Auto support for Arabic */
+    }
+
+    h3 {
+      margin-top: 1rem;
+      color: #2c3e50;
+    }
+
+    p {
+      color: #333;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .banner {
+      width: 100%;
+      height: 300px; /* Adjust as needed */
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      /* Optional: gradient overlay for blue effect */
+      background-blend-mode: overlay;
+      background-color: #2a3b8f; /* fallback blue */
+    }
+    .banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #2a3b8f 0%, #4f5bd5 100%);
+      opacity: 0.5;
+      z-index: 1;
+      border-radius: 16px;
+    }
+    .banner-content {
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div id="random-banner" class="banner"></div>
+  <div class="container">
+    <h1>🧠 المدينة جي بي تي</h1>
+    <label for="query">أدخل استفسارك من فضلك</label>
+    <input type="text" id="query" placeholder="Ask a question..." />
+
+    <button onclick="submitQuery()">أرسل</button>
+
+    <div id="response"></div>
+    <div id="context"></div>
+  </div>
+
+  <script>
+    async function submitQuery() {
+      const query = document.getElementById("query").value;
+      const responseDiv = document.getElementById("response");
+      const contextDiv = document.getElementById("context");
+
+      responseDiv.innerHTML = "<p><em>جاري التحميل...</em></p>";
+      contextDiv.innerHTML = "";
+
+      const res = await fetch("/rag", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: query })
+      });
+
+      const data = await res.json();
+      responseDiv.innerHTML = `<h3>الجواب:</h3><p>${data.answer}</p>`;
+      contextDiv.innerHTML = `<h3> السياق المستخدم:</h3><p>${data.context}</p>`;
+    }
+
+    // List your image filenames here
+    const images = [
+      "static/banner-images/img1.jpg",
+      "static/banner-images/img2.jpg",
+      "static/banner-images/img3.jpg"
+      // Add more as needed
+    ];
+
+    // Pick a random image
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+
+    // Set as background
+    const banner = document.getElementById('random-banner');
+    banner.style.backgroundImage = `url('${randomImage}')`;
+
+    // Optional: Add text content
+    banner.innerHTML = '<div class="banner-content">Welcome to My Page!</div>';
+  </script>
+</body>
+</html>
