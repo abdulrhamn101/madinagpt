@@ -1,0 +1,9 @@
+flask
+flask-cors
+langchain-openai
+langchain-community
+openai
+semantic-router
+numpy
+tqdm
+faiss-cpu
